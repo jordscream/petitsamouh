@@ -22,8 +22,12 @@ console.log(data);
 
             var images = [];
             var contents = [];
-            $('img', content).each(function(){
-                images.push($(this).attr('src'));
+            $('img, object', content).each(function(){
+                if ($(this).attr('src') != undefined) {
+                    images.push($(this).attr('src'));
+                } else {
+                    images.push('<object>' + $(this).html() + '</object>');
+                }
             });
 
             var splits = content.split('---');
@@ -66,8 +70,14 @@ console.log(data);
 
             var secondary = '';
             for (var j = 1; j < articles[i]['images'].length; j++) {
-                var big = articles[i]['images'][j].replace(/s320/i, "s1600");
-                secondary += '<div style="display: none" href="'+big+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
+                if (articles[i]['images'][j].indexOf('object') > 0) {
+                    secondary += '<div style="display: none" id="#gallery'+i+'_'+j+'">'+ articles[i]['images'][j] +'</div>';
+                    secondary += '<div style="display: none" data-src="#gallery'+i+'_'+j+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
+                } else {
+                    var big = articles[i]['images'][j].replace(/s320/i, "s1600");
+                    secondary += '<div style="display: none" href="'+big+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
+
+                }
             }
 
             item.outerHTML = primary;
@@ -77,7 +87,7 @@ console.log(data);
         console.log($('#fh5co-board').html());
 
         $('[data-fancybox]').fancybox({
-
+            type: 'inline',
             baseClass : 'fancybox-custom-layout',
             margin    : 0,
             infobar   : true,
