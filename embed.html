@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Video</title>
+    <script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+
+</head>
+<body>
+
+<object>
+<param name="movie" value="https://www.youtube.com/get_player">
+<param name="bgcolor" value="#FFFFFF">
+<param name="allowfullscreen" value="true">
+<param name="flashvars" value="">
+<embed src="https://www.youtube.com/get_player" type="application/x-shockwave-flash" bgcolor="#FFFFFF" flashvars=""
+       allowfullscreen="true" width="320" height="266">
+</object>
+
+<script>
+    function GetURLParameter(sParam)
+    {
+        var sPageURL = window.location.search.substring(1);
+        var sURLVariables = sPageURL.split('&');
+        for (var i = 0; i < sURLVariables.length; i++)
+        {
+            var sParameterName = sURLVariables[i].split('=');
+            if (sParameterName[0] == sParam)
+            {
+                return sParameterName[1];
+            }
+        }
+    }
+
+    var url = GetURLParameter('url');
+
+    $('param[name=flashvars]').attr('value', 'flvurl=' + url);
+    $('embed').attr('flashvars', 'flvurl=' + url);
+
+</script>
+
+</body>
+</html>

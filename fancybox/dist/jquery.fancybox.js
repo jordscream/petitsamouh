@@ -82,7 +82,14 @@
         iframe : {
 
             // Iframe template
-            tpl : '<iframe id="fancybox-frame{rnd}" name="fancybox-frame{rnd}" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen allowtransparency="true" src=""></iframe>',
+            tpl : '<object>'+
+            '<param name="movie" value="https://www.youtube.com/get_player">'+
+            '<param name="bgcolor" value="#FFFFFF">'+
+            '<param name="allowfullscreen" value="true">'+
+            '<param name="flashvars" value="">'+
+            '<embed src="https://www.youtube.com/get_player" type="application/x-shockwave-flash" bgcolor="#FFFFFF"'+
+            'flashvars="" allowfullscreen="true" width="320" height="266">'+
+            '</object>',
 
             // Preload iframe before displaying it
             // This allows to calculate iframe content width and height
@@ -1706,7 +1713,12 @@
 
             }
 
-            $iframe.attr( 'src', slide.src );
+            $('param[name=flashvars]', $iframe).attr( 'value', slide.src );
+            $('embed', $iframe).attr( 'flashvars', slide.src );
+
+            var obj = $($iframe);
+            //$($iframe).remove();
+            $('.fancybox-content').append('<object scrolling="no">' + obj.html() + '</object>');
 
             if ( slide.opts.smallBtn ) {
                 slide.$content.prepend( slide.opts.closeTpl );

@@ -71,8 +71,8 @@ console.log(data);
             var secondary = '';
             for (var j = 1; j < articles[i]['images'].length; j++) {
                 if (articles[i]['images'][j].indexOf('object') > 0) {
-                    secondary += '<div style="display: none" id="#gallery'+i+'_'+j+'">'+ articles[i]['images'][j] +'</div>';
-                    secondary += '<div style="display: none" data-src="#gallery'+i+'_'+j+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
+                    secondary += '<div style="display: none" id="gallery'+i+'_'+j+'">'+articles[i]['images'][j]+'</div>';
+                    secondary += '<a style="display: none" href="flvurl=https://redirector.googlevideo.com/videoplayback?requiressl%3Dyes%26id%3Dd4c2532f3108538f%26itag%3D5%26source%3Dblogger%26app%3Dblogger%26cmo%3Dsecure_transport%253Dyes%26cmo%3Dsensitive_content%253Dyes%26ip%3D0.0.0.0%26ipbits%3D0%26expire%3D1495666021%26sparams%3Drequiressl,id,itag,source,ip,ipbits,expire%26signature%3D7724E308B237BB617EA3FFE970F6F0809792AB.3F223B462317AF4D877E8B06A179F952C3D9E156%26key%3Dck2&amp;iurl=http://video.google.com/ThumbnailServer2?app%3Dblogger%26contentid%3Dd4c2532f3108538f%26offsetms%3D5000%26itag%3Dw160%26sigh%3DS9FoH7-dd3aq6TIjpI7uVON_LB8&amp;autoplay=0&amp;ps=blogger" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></a>';
                 } else {
                     var big = articles[i]['images'][j].replace(/s320/i, "s1600");
                     secondary += '<div style="display: none" href="'+big+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
@@ -87,7 +87,6 @@ console.log(data);
         console.log($('#fh5co-board').html());
 
         $('[data-fancybox]').fancybox({
-            type: 'inline',
             baseClass : 'fancybox-custom-layout',
             margin    : 0,
             infobar   : true,
