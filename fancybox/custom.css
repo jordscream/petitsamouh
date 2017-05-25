@@ -570,6 +570,7 @@
 			font-family: 'Oranienbaum', serif;
 		}
 		.fancybox-custom-layout .fancybox-slider-wrap {
+			top: 45px;
 			right: 294px;
 		}
 

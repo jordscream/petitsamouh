@@ -11,11 +11,17 @@ function strip(html)
     return tmp.textContent || tmp.innerText || "";
 }
 
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+
 $( document ).ready(function() {
 
     $.get("https://www.googleapis.com/blogger/v3/blogs/667964052856651358/posts?key=AIzaSyD_N_rt1d9Y5hvQjbTYaa2MZ6nK7NkEOrA", function (data) {
 
-console.log(data);
+
         for (var i = 0; i < data.items.length; i++) {
 
             var content = data.items[i].content;
@@ -43,6 +49,12 @@ console.log(data);
             article['contents'] = contents;
             article['title']    = data.items[i].title;
 
+            var articleDate = data.items[i].published.substr(0, 10);
+            articleDate = articleDate.split("-");
+            articleDate = addDays(articleDate, 7).getTime();
+            var now = new Date().getTime();
+            article['date'] = articleDate;
+
             article['summary']  = '';
 
             article['location'] = 'SomeWhere in the Ground';
@@ -53,26 +65,48 @@ console.log(data);
             articles.push(article);
         }
 
-        console.log(articles);
-        var fb_view = '';
         for (var i = 0; i < articles.length; i++) {
 
             var item = document.createElement('div');
 
             salvattore.appendElements(document.querySelector('#fh5co-board'), [item]);
 
+            var video = 0;
+            for (var j = 1; j < articles[i]['images'].length; j++) {
+                if (articles[i]['images'][j].indexOf('object') > 0) {
+                    video = 1;
+                }
+            }
+
+
+            var new_str = '';
+            var video_str = '';
+
+            if (articles[i]['date'] >= now) {
+                new_str = '<div class="new"></div>';
+            }
+
+            if (video == 1) {
+                video_str = '<a  href="#" class="videoy" data="gallery_'+i+'"></a>';
+            }
+
             var big = articles[i]['images'][0].replace(/s320/i, "s1600");
             var primary = '<div class="item" style="padding: 18px">'+
                 '<div class="animate-box">'+
-                '<a href="'+big+'" class="image-popup fh5co-board-img" title="" data-fancybox="gallery_'+i+'" rel="test" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][0].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"><img src="'+articles[i]['images'][0]+'" alt=""></a>'+
+                '<a href="'+big+'" class="image-popup fh5co-board-img gallery_'+i+'" title="" data-fancybox="gallery_'+i+'" rel="test" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][0].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"><img src="'+articles[i]['images'][0]+'" alt=""></a>'+
+                  new_str + video_str +
                 '</div>'+
                 '<div class="fh5co-item-title">'+articles[i]['title']+'</div>';
 
             var secondary = '';
             for (var j = 1; j < articles[i]['images'].length; j++) {
                 if (articles[i]['images'][j].indexOf('object') > 0) {
-                    secondary += '<div style="display: none" id="gallery'+i+'_'+j+'">'+articles[i]['images'][j]+'</div>';
-                    secondary += '<a style="display: none" href="flvurl=https://redirector.googlevideo.com/videoplayback?requiressl%3Dyes%26id%3Dd4c2532f3108538f%26itag%3D5%26source%3Dblogger%26app%3Dblogger%26cmo%3Dsecure_transport%253Dyes%26cmo%3Dsensitive_content%253Dyes%26ip%3D0.0.0.0%26ipbits%3D0%26expire%3D1495666021%26sparams%3Drequiressl,id,itag,source,ip,ipbits,expire%26signature%3D7724E308B237BB617EA3FFE970F6F0809792AB.3F223B462317AF4D877E8B06A179F952C3D9E156%26key%3Dck2&amp;iurl=http://video.google.com/ThumbnailServer2?app%3Dblogger%26contentid%3Dd4c2532f3108538f%26offsetms%3D5000%26itag%3Dw160%26sigh%3DS9FoH7-dd3aq6TIjpI7uVON_LB8&amp;autoplay=0&amp;ps=blogger" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></a>';
+
+                    articles[i]['images'][j] = articles[i]['images'][j].replace('320', '100%');
+                    articles[i]['images'][j] = articles[i]['images'][j].replace('266', '100%');
+
+                    secondary += '<div style="width: 100%;height: 100%" id="gallery'+i+'_'+j+'">'+articles[i]['images'][j]+'</div>';
+                    secondary += '<a style="display: none" href="#gallery'+i+'_'+j+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></a>';
                 } else {
                     var big = articles[i]['images'][j].replace(/s320/i, "s1600");
                     secondary += '<div style="display: none" href="'+big+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
@@ -84,7 +118,11 @@ console.log(data);
             $('.lightboxcontent').append(secondary);
         }
 
-        console.log($('#fh5co-board').html());
+        $('.videoy').click(function(){
+            $('.' + $(this).attr('data')).trigger('click');
+            return false;
+        })
+
 
         $('[data-fancybox]').fancybox({
             baseClass : 'fancybox-custom-layout',

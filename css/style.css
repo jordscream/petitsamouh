@@ -7714,6 +7714,7 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-transition: 0.2s;
   -o-transition: 0.2s;
   transition: 0.2s;
+
 }
 #fh5co-board .item .fh5co-board-img {
   border-top-left-radius: 4px;
@@ -7726,7 +7727,32 @@ h1, h2, h3, h4, h5, h6 {
 
 .js .animate-box {
   opacity: 0;
+  position: relative;
 }
+
+.new {
+  background: url(../images/new.png) no-repeat;
+  position: absolute;
+  top: 0;
+  right: -5px;
+  z-index: 1000;
+  width: 75px;
+  height: 48px;
+  border: 0;
+}
+
+.videoy {
+  background: url(../images/youtube.png) no-repeat;
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  opacity: 0.8;
+}
+
 
 pre {
   background: #e9e9e9;
