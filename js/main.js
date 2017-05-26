@@ -28,18 +28,17 @@ $( document ).ready(function() {
 
             var images = [];
             var contents = [];
-            $('img, object', content).each(function(){
-                if ($(this).attr('src') != undefined) {
+            var video = 0;
+            $('img, iframe', content).each(function(){
                     images.push($(this).attr('src'));
-                } else {
-                    images.push('<object>' + $(this).html() + '</object>');
-                }
+                    if ($(this)[0].nodeName != 'IMG') {
+                        video = 1;
+                    }
             });
 
             var splits = content.split('---');
 
             for (var j = 0; j < splits.length; j++) {
-//                splits[j] = splits[j].replace('<br />', '\n');
                 contents.push(strip(splits[j]));
             }
 
@@ -48,6 +47,7 @@ $( document ).ready(function() {
             article['images']   = images;
             article['contents'] = contents;
             article['title']    = data.items[i].title;
+            article['video']   = video;
 
             var articleDate = data.items[i].published.substr(0, 10);
             articleDate = articleDate.split("-");
@@ -71,13 +71,6 @@ $( document ).ready(function() {
 
             salvattore.appendElements(document.querySelector('#fh5co-board'), [item]);
 
-            var video = 0;
-            for (var j = 1; j < articles[i]['images'].length; j++) {
-                if (articles[i]['images'][j].indexOf('object') > 0) {
-                    video = 1;
-                }
-            }
-
 
             var new_str = '';
             var video_str = '';
@@ -86,7 +79,7 @@ $( document ).ready(function() {
                 new_str = '<div class="new"></div>';
             }
 
-            if (video == 1) {
+            if (articles[i]['video'] == 1) {
                 video_str = '<a  href="#" class="videoy" data="gallery_'+i+'"></a>';
             }
 
@@ -100,18 +93,8 @@ $( document ).ready(function() {
 
             var secondary = '';
             for (var j = 1; j < articles[i]['images'].length; j++) {
-                if (articles[i]['images'][j].indexOf('object') > 0) {
-
-                    articles[i]['images'][j] = articles[i]['images'][j].replace('320', '100%');
-                    articles[i]['images'][j] = articles[i]['images'][j].replace('266', '100%');
-
-                    secondary += '<div style="width: 100%;height: 100%" id="gallery'+i+'_'+j+'">'+articles[i]['images'][j]+'</div>';
-                    secondary += '<a style="display: none" href="#gallery'+i+'_'+j+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></a>';
-                } else {
                     var big = articles[i]['images'][j].replace(/s320/i, "s1600");
                     secondary += '<div style="display: none" href="'+big+'" class="lightbox" title="" data-fancybox="gallery_'+i+'" data-caption="'+articles[i]['title']+'<br/><br/><span>'+ articles[i]['contents'][j].trim().replace(/(?:\r\n|\r|\n)/g, '<br />') +'</span>"></div>';
-
-                }
             }
 
             item.outerHTML = primary;
